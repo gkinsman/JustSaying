@@ -1,7 +1,10 @@
 using System;
 using System.Threading.Tasks;
+using JustSaying.Messaging.MessageHandling;
+using JustSaying.Models;
 using JustSaying.Sample.Restaurant.KitchenConsole.Handlers;
 using JustSaying.Sample.Restaurant.Models;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -34,6 +37,23 @@ namespace JustSaying.Sample.Restaurant.KitchenConsole
                 Log.CloseAndFlush();
             }
         }
+
+        public interface IHandlerDefinition<THandler, TMessage> where THandler : IHandlerAsync<TMessage> where TMessage : Message
+        {
+            void ConfigureMiddleware();
+        }
+
+        public class HandlerDefinition<THandler, TMessage> : IHandlerDefinition<THandler, TMessage> where THandler : IHandlerAsync<TMessage> where TMessage : Message
+        {
+            public void ConfigureMiddleware()
+            {
+                
+            }
+        }
+
+        public class HandlerDefinition<THandler>
+
+        public class HandlerDefinition
 
         private static async Task Run()
         {
