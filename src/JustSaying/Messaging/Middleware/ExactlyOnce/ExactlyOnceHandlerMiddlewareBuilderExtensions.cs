@@ -16,8 +16,8 @@ namespace JustSaying.Messaging.Middleware
         /// <param name="lockDuration">The length of time to lock messages while handling them.</param>
         /// <typeparam name="TMessage">The type of the message that should be locked.</typeparam>
         /// <returns>The current <see cref="HandlerMiddlewareBuilder"/>.</returns>
-        public static HandlerMiddlewareBuilder UseExactlyOnce<TMessage>(
-            this HandlerMiddlewareBuilder builder,
+        public static IHandlerMiddlewareBuilder UseExactlyOnce<TMessage>(
+            this IHandlerMiddlewareBuilder builder,
             string lockKey,
             TimeSpan? lockDuration = null)
         {

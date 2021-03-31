@@ -1,6 +1,7 @@
 using System;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
+using JustSaying.Fluent.Definitions;
 using JustSaying.Messaging;
 using JustSaying.Messaging.MessageHandling;
 using JustSaying.Sample.Restaurant.Models;
@@ -8,6 +9,24 @@ using Microsoft.Extensions.Logging;
 
 namespace JustSaying.Sample.Restaurant.OrderingApi.Handlers
 {
+    public class ThrottledSubscriptionGroupDefinition : ISubscriptionGroupDefinition
+    {
+        public ThrottledSubscriptionGroupDefinition()
+        {
+            Name = "throttled-subscription-group";
+        }
+
+        public string Name { get; }
+    }
+
+    public class OrderReadyEventSubscriptionDefinition : SubscriptionDefinition<OrderReadyEventHandler, OrderReadyEvent>
+    {
+        public OrderReadyEventSubscriptionDefinition()
+        {
+            SubscriptionGroup = new ThrottledSubscriptionGroupDefinition();
+        }
+    }
+
     public class OrderReadyEventHandler : IHandlerAsync<OrderReadyEvent>
     {
         private readonly ILogger<OrderReadyEventHandler> _logger;

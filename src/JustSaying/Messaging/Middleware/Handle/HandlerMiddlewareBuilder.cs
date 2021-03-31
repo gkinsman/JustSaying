@@ -9,15 +9,44 @@ using HandleMessageMiddleware = JustSaying.Messaging.Middleware.MiddlewareBase<J
 // ReSharper disable once CheckNamespace
 namespace JustSaying.Messaging.Middleware
 {
+    public interface IHandlerMiddlewareBuilder
+    {
+        /// <summary>
+        /// Adds a middleware of type <typeparamref name="TMiddleware"/> to the pipeline which will be resolved from the
+        /// <see cref="IServiceResolver"/>. It will be resolved once when the pipeline is built, and cached
+        /// for the lifetime of the bus.
+        /// </summary>
+        /// <typeparam name="TMiddleware">The type of the middleware to add.</typeparam>
+        /// <returns>The current HandlerMiddlewareBuilder.</returns>
+        HandlerMiddlewareBuilder Use<TMiddleware>() where TMiddleware : MiddlewareBase<HandleMessageContext, bool>;
+
+        /// <summary>
+        /// Adds the provided middleware instance to the pipeline.
+        /// </summary>
+        /// <param name="middleware">An instance of a middleware to add to the pipeline.</param>
+        /// <returns>The current HandlerMiddlewareBuilder.</returns>
+        HandlerMiddlewareBuilder Use(HandleMessageMiddleware middleware);
+
+        /// <summary>
+        /// Adds a middleware to the pipeline. The Func&lt;HandleMessageMiddleware&gt; will be called once
+        /// when the pipeline is built and cached for the lifetime of the bus.
+        /// </summary>
+        /// <param name="middlewareFactory">A <see cref="Func{HandleMessageMiddleware}"/> that produces an
+        /// instance of a middleware to use in the pipeline.</param>
+        /// <returns>The current HandlerMiddlewareBuilder.</returns>
+        HandlerMiddlewareBuilder Use(Func<HandleMessageMiddleware> middlewareFactory);
+
+        IServiceResolver ServiceResolver { get; }
+    }
 
     /// <summary>
     /// A class representing a builder for a middleware pipeline.
     /// </summary>
-    public sealed class HandlerMiddlewareBuilder
+    public sealed class HandlerMiddlewareBuilder : IHandlerMiddlewareBuilder
     {
         private Action<HandlerMiddlewareBuilder> _configure;
 
-        internal IServiceResolver ServiceResolver { get; }
+        public IServiceResolver ServiceResolver { get; }
         private IHandlerResolver HandlerResolver { get; }
 
         private readonly List<Func<HandleMessageMiddleware>> _middlewares;

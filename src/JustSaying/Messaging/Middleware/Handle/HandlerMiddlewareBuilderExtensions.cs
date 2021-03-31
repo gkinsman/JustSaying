@@ -19,8 +19,8 @@ namespace JustSaying.Messaging.Middleware
         /// <exception cref="ArgumentNullException">
         /// <paramref name="builder"/> or <paramref name="handler"/> is <see langword="null"/>.
         /// </exception>
-        public static HandlerMiddlewareBuilder UseHandler<TMessage>(
-            this HandlerMiddlewareBuilder builder,
+        public static IHandlerMiddlewareBuilder UseHandler<TMessage>(
+            this IHandlerMiddlewareBuilder builder,
             Func<HandlerResolutionContext, IHandlerAsync<TMessage>> handler) where TMessage : Message
         {
             if (builder == null) throw new ArgumentNullException(nameof(builder));

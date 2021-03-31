@@ -38,22 +38,6 @@ namespace JustSaying.Sample.Restaurant.KitchenConsole
             }
         }
 
-        public interface IHandlerDefinition<THandler, TMessage> where THandler : IHandlerAsync<TMessage> where TMessage : Message
-        {
-            void ConfigureMiddleware();
-        }
-
-        public class HandlerDefinition<THandler, TMessage> : IHandlerDefinition<THandler, TMessage> where THandler : IHandlerAsync<TMessage> where TMessage : Message
-        {
-            public void ConfigureMiddleware()
-            {
-                
-            }
-        }
-
-        public class HandlerDefinition<THandler>
-
-        public class HandlerDefinition
 
         private static async Task Run()
         {

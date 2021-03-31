@@ -38,11 +38,12 @@ namespace JustSaying.UnitTests.Messaging.MessageHandling
 
             var handler = new InspectableHandler<OrderAccepted>();
 
-            var middleware = new HandlerMiddlewareBuilder(testResolver, testResolver)
-                .UseExactlyOnce<OrderAccepted>(nameof(InspectableHandler<OrderAccepted>),
+            var middlewareBuilder = new HandlerMiddlewareBuilder(testResolver, testResolver);
+                middlewareBuilder.UseExactlyOnce<OrderAccepted>(nameof(InspectableHandler<OrderAccepted>),
                     TimeSpan.FromSeconds(1))
-                .UseHandler(ctx => handler)
-                .Build();
+                .UseHandler(ctx => handler);
+
+            var middleware = middlewareBuilder.Build();
 
             var context = new HandleMessageContext(new OrderAccepted(), typeof(OrderAccepted),
                 "test-queue");

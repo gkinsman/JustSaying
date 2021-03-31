@@ -1,4 +1,9 @@
+using System.Threading.Tasks;
 using JustSaying.AwsTools;
+using JustSaying.Fluent.Definitions;
+using JustSaying.Messaging.MessageHandling;
+using JustSaying.Messaging.Middleware;
+using JustSaying.Models;
 using JustSaying.Sample.Restaurant.Models;
 using JustSaying.Sample.Restaurant.OrderingApi.Handlers;
 using Microsoft.AspNetCore.Builder;
@@ -55,6 +60,9 @@ namespace JustSaying.Sample.Restaurant.OrderingApi
                     //  - a SQS queue of name `orderreadyevent_error`
                     //  - a SNS topic of name `orderreadyevent`
                     //  - a SNS topic subscription on topic 'orderreadyevent' and queue 'orderreadyevent'
+
+                    x.ForDefinition<OrderReadyEventSubscriptionDefinition>();
+
                     x.ForTopic<OrderReadyEvent>();
                     x.ForTopic<OrderDeliveredEvent>();
                 });

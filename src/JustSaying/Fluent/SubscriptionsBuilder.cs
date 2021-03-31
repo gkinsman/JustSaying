@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using JustSaying.AwsTools;
 using JustSaying.AwsTools.QueueCreation;
+using JustSaying.Fluent.Definitions;
 using JustSaying.Messaging.Channels.SubscriptionGroups;
+using JustSaying.Messaging.MessageHandling;
 using JustSaying.Models;
 using Microsoft.Extensions.Logging;
 
@@ -34,6 +36,8 @@ namespace JustSaying.Fluent
         /// Gets the configured subscription builders.
         /// </summary>
         private IList<ISubscriptionBuilder<Message>> Subscriptions { get; } = new List<ISubscriptionBuilder<Message>>();
+
+        internal IList<ISubscriptionDefinition> Definitions = new List<ISubscriptionDefinition>();
 
         private IDictionary<string, SubscriptionGroupConfigBuilder> SubscriptionGroupSettings { get; } =
             new Dictionary<string, SubscriptionGroupConfigBuilder>();
@@ -66,6 +70,14 @@ namespace JustSaying.Fluent
             where T : Message
         {
             return ForQueue<T>((p) => p.WithDefaultQueue());
+        }
+
+        public SubscriptionsBuilder ForDefinition<TDefinition>()
+            where TDefinition : ISubscriptionDefinition, new()
+        {
+            Definitions.Add(new TDefinition());
+
+            return this;
         }
 
         /// <summary>
@@ -196,6 +208,11 @@ namespace JustSaying.Fluent
             foreach (ISubscriptionBuilder<Message> builder in Subscriptions)
             {
                 builder.Configure(bus, resolver, serviceResolver, creator, loggerFactory);
+            }
+
+            foreach (var definition in Definitions)
+            {
+
             }
         }
 

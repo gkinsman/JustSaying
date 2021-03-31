@@ -69,7 +69,9 @@ namespace JustSaying.UnitTests.Messaging.Channels.SubscriptionGroupTests
             var testResolver = new FakeServiceResolver(sc => sc
                 .AddLogging(l => l.AddXUnit(OutputHelper)));
 
-            Middleware = new HandlerMiddlewareBuilder(testResolver, testResolver).UseHandler(ctx => Handler).Build();
+            var builder = new HandlerMiddlewareBuilder(testResolver, testResolver);
+            builder.UseHandler(ctx => Handler);
+            Middleware = builder.Build();
             Monitor = new TrackingLoggingMonitor(LoggerFactory.CreateLogger<TrackingLoggingMonitor>());
             SerializationRegister = new FakeSerializationRegister();
             MiddlewareMap = new MiddlewareMap();
